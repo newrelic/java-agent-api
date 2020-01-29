@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.newrelic.api.agent"}]
+packageSearchIndex = [{"l":"com.newrelic.api.agent"}]
