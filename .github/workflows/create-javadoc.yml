@@ -1,0 +1,73 @@
+name: Javadoc
+
+env:
+  JAVADOC_TOKEN: ${{ secrets.JAVADOC_TOKEN }}
+  EMAIL: ${{ secrets.EMAIL }}
+  
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: 'This is the version for the javadoc to be created'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/newrelic-java-agent
+          ref: v${{ inputs.version }}
+          path: newrelic-java-agent
+
+      - name: Set gradle.properties
+        run: |
+          cd ${GITHUB_WORKSPACE}/newrelic-java-agent
+          sed -i -e "s|jdk8=8|jdk8=${JAVA_HOME_8_x64}|
+          s|jdk11=11|jdk11=${JAVA_HOME_11_x64}|
+          s|jdk17=17|jdk17=${JAVA_HOME_17_x64}|" gradle.properties.gha
+          mv gradle.properties.gha gradle.properties
+
+      - name: Setup Gradle Options
+        run: echo "GRADLE_OPTIONS=-Porg.gradle.java.installations.auto-detect=false -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_x64,JAVA_HOME_11_x64,JAVA_HOME_8_x64" >> $GITHUB_ENV
+
+      - name: Create Javadoc
+        run: |
+          cd ${GITHUB_WORKSPACE}/newrelic-java-agent/newrelic-api 
+          ../gradlew javadoc $GRADLE_OPTIONS -Prelease=true -PagentVersion=${{ inputs.version }}
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/java-agent-api
+          ref: gh-pages
+          path: java-agent-api
+          token: ${{ secrets.JAVADOC_TOKEN }}
+
+      - name: Relocate Javadoc
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          rm -r java-agent-api/javadoc
+          mv newrelic-java-agent/newrelic-api/build/docs/javadoc java-agent-api
+
+      - name: Commit Javadoc Changes & Push New Branch
+        env:
+         GITHUB_TOKEN: ${{ secrets.JAVADOC_TOKEN }}
+        run: |
+          cd java-agent-api
+          git config --global user.email ${{ env.EMAIL }}
+          git config --global user.name "newrelic-java-agent-team"
+          git remote set-url origin https://x-access-token:${{ secrets.JAVADOC_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git add javadoc
+          git commit -m 'Updating to v${{ inputs.version }}'
+          git push origin gh-pages:v${{ inputs.version }}
+          gh pr create -B gh-pages -H v${{ inputs.version }} --title 'Merging v${{ inputs.version }} of javadocs' --body 'Merging v${{ inputs.version }} of javadocs'
