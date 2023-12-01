@@ -60,14 +60,11 @@ jobs:
           mv newrelic-java-agent/newrelic-api/build/docs/javadoc java-agent-api
 
       - name: Commit Javadoc Changes & Push New Branch
-        env:
-         GITHUB_TOKEN: ${{ secrets.JAVADOC_TOKEN }}
         run: |
           cd java-agent-api
           git config --global user.email ${{ env.EMAIL }}
           git config --global user.name "newrelic-java-agent-team"
-          git remote set-url origin https://x-access-token:${{ secrets.JAVADOC_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
           git add javadoc
           git commit -m 'Updating to v${{ inputs.version }}'
-          git push origin gh-pages:v${{ inputs.version }}
-          gh pr create -B gh-pages -H v${{ inputs.version }} --title 'Merging v${{ inputs.version }} of javadocs' --body 'Merging v${{ inputs.version }} of javadocs'
+          git push origin gh-pages
