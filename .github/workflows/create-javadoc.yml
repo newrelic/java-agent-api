@@ -51,7 +51,6 @@ jobs:
           repository: newrelic/java-agent-api
           ref: gh-pages
           path: java-agent-api
-          token: ${{ secrets.JAVADOC_TOKEN }}
 
       - name: Relocate Javadoc
         run: |
