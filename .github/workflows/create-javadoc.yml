@@ -61,8 +61,10 @@ jobs:
       - name: Commit Javadoc Changes & Push New Branch
         run: |
           cd java-agent-api
-          git config --global user.email ${{ env.EMAIL }}
-          git config --global user.name "newrelic-java-agent-team"
+          # git config --global user.email ${{ env.EMAIL }}
+          # git config --global user.name "newrelic-java-agent-team"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add javadoc
           git commit -m 'Updating to v${{ inputs.version }}'
           git push
