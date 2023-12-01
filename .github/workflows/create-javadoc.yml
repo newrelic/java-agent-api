@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Checkout
+      - name: Checkout agent
         uses: actions/checkout@v3
         with:
           repository: newrelic/newrelic-java-agent
@@ -45,7 +45,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/newrelic-java-agent/newrelic-api 
           ../gradlew javadoc $GRADLE_OPTIONS -Prelease=true -PagentVersion=${{ inputs.version }}
       
-      - name: Checkout
+      - name: Checkout api/javadoc
         uses: actions/checkout@v3
         with:
           repository: newrelic/java-agent-api
@@ -61,10 +61,9 @@ jobs:
       - name: Commit Javadoc Changes & Push New Branch
         run: |
           cd java-agent-api
-          # git config --global user.email ${{ env.EMAIL }}
-          # git config --global user.name "newrelic-java-agent-team"
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config --global user.email ${{ env.EMAIL }}
+          git config --global user.name "newrelic-java-agent-team"
+          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
           git add javadoc
           git commit -m 'Updating to v${{ inputs.version }}'
           git push
