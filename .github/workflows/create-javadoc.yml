@@ -45,19 +45,20 @@ jobs:
           cd ${GITHUB_WORKSPACE}/newrelic-java-agent/newrelic-api 
           ../gradlew javadoc $GRADLE_OPTIONS -Prelease=true -PagentVersion=${{ inputs.version }}
       
-      - name: Checkout and push api/javadoc
+      - name: Checkout api/javadoc
         uses: actions/checkout@v3
         with:
-          repository: newrelic/java-agent-api
           ref: gh-pages
           path: java-agent-api
-          run: |
+
+      - name: Update contents and push api/javadoc
+        run: |
+            git config --global user.email ${{ env.EMAIL }}
+            git config --global user.name "newrelic-java-agent-team"
             cd ${GITHUB_WORKSPACE}
             rm -r java-agent-api/javadoc
             mv newrelic-java-agent/newrelic-api/build/docs/javadoc java-agent-api
             cd java-agent-api
-            git config --global user.email ${{ env.EMAIL }}
-            git config --global user.name "newrelic-java-agent-team"
             git add javadoc
             git commit -m 'Updating to v${{ inputs.version }}'
             git push
