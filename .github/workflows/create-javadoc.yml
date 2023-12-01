@@ -63,7 +63,6 @@ jobs:
           cd java-agent-api
           git config --global user.email ${{ env.EMAIL }}
           git config --global user.name "newrelic-java-agent-team"
-          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
           git add javadoc
           git commit -m 'Updating to v${{ inputs.version }}'
-          git push origin gh-pages
+          git push
