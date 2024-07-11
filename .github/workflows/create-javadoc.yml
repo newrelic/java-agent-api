@@ -1,7 +1,7 @@
 name: Javadoc
 
 env:
-  JAVADOC_TOKEN: ${{ secrets.JAVADOC_TOKEN }}
+  JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
   EMAIL: ${{ secrets.EMAIL }}
 
 on:
