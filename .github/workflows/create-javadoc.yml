@@ -2,7 +2,7 @@ name: Javadoc
 
 env:
   JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   EMAIL: ${{ secrets.EMAIL }}
 
 on:
@@ -57,6 +57,7 @@ jobs:
           git config --global user.email ${{ env.EMAIL }}
           git config --global user.name "newrelic-java-agent-team"
           cd ${GITHUB_WORKSPACE}
+          git co gh-pages
           rm -r java-agent-api/javadoc
           mv newrelic-java-agent/newrelic-api/build/docs/javadoc java-agent-api
           cd java-agent-api
