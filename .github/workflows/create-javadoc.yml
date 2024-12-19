@@ -2,6 +2,7 @@ name: Javadoc
 
 env:
   JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   EMAIL: ${{ secrets.EMAIL }}
 
 on:
@@ -61,4 +62,5 @@ jobs:
           cd java-agent-api
           git add javadoc
           git commit -m 'Updating to v${{ inputs.version }}'
-          git push
+          git push origin gh-pages:v${{ inputs.version }}
+          gh pr create -B gh-pages -H v${{ inputs.version }} --title 'Merging v${{ inputs.version }} of javadocs' --body 'Merging v${{ inputs.version }} of javadocs'
