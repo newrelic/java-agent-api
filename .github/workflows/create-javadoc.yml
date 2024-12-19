@@ -2,7 +2,7 @@ name: Javadoc
 
 env:
   JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   EMAIL: ${{ secrets.EMAIL }}
 
 on:
