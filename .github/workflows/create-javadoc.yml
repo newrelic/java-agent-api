@@ -1,5 +1,10 @@
 name: Javadoc
 
+# Permissions granted to all jobs in the workflow.
+# Permissions that aren't explicitly defined here will default to a value of none.
+permissions:
+  contents: write
+
 env:
   JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -17,7 +22,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1 # detects minimum permissions required to run the workflow, uncomment to use
+      # - uses: GitHubSecurityLab/actions-permissions/monitor@v1 # detects minimum permissions required to run the workflow, uncomment to use
       - name: Set Up Java 17
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # pin@v4
         with:
