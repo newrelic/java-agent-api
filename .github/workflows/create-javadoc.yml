@@ -4,6 +4,7 @@ name: Javadoc
 # Permissions that aren't explicitly defined here will default to a value of none.
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   JAVADOC_TOKEN: ${{ secrets.JAVADOC_BOT_PAT }}
